@@ -1,0 +1,6 @@
+framework module JKPageController {
+  umbrella header "JKPageController-umbrella.h"
+
+  export *
+  module * { export * }
+}

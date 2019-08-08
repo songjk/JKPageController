@@ -24,6 +24,9 @@ pod 'JKPageController'
 
 songjk, 447299884@qq.com
 
+##使用方法
+    控制器继承JKBackController，并实现协议JKBackControllerDelegate
+
 ## License
 
 JKPageController is available under the MIT license. See the LICENSE file for more info.

@@ -1,0 +1,16 @@
+PODS:
+  - JKPageController (0.1.0)
+
+DEPENDENCIES:
+  - JKPageController (from `../`)
+
+EXTERNAL SOURCES:
+  JKPageController:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  JKPageController: 9bdae714eef18a9c5519d566db384219f3e1ea2a
+
+PODFILE CHECKSUM: 57829e2808753df2262f00dad638826cf5288464
+
+COCOAPODS: 1.5.3

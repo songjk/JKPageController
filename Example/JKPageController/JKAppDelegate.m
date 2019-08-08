@@ -7,12 +7,19 @@
 //
 
 #import "JKAppDelegate.h"
+#import "TestViewController.h"
 
 @implementation JKAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // Override point for customization after application launch.    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    TestViewController * vc = [[TestViewController alloc] init];
+    vc.title = @"hha";
+    UITabBarController * tb = [[UITabBarController alloc] init];
+    [tb addChildViewController:vc];
+    self.window.rootViewController = tb;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
