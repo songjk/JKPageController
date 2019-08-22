@@ -1,5 +1,5 @@
 PODS:
-  - JKPageController (0.1.0)
+  - JKPageController (1.0.0)
 
 DEPENDENCIES:
   - JKPageController (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  JKPageController: 9bdae714eef18a9c5519d566db384219f3e1ea2a
+  JKPageController: 7951d71ee74f58708881ff220c982fa177faa457
 
 PODFILE CHECKSUM: 57829e2808753df2262f00dad638826cf5288464
 

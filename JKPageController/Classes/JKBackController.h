@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)addSubController:(UIViewController<JKBackControllerSubDelegate>*)vc; // 添加子视图
 -(void)removeSubController:(UIViewController*)vc; // 移除子视图
 -(void)updateView; //更新界面
+-(void)setCurrentViewByIndex:(int)index;
 @end
 
 NS_ASSUME_NONNULL_END

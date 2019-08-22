@@ -28,6 +28,7 @@
         MyTableViewController * vc1 = [[MyTableViewController alloc] init];
         [self addSubController:vc1];
     }
+    [self setCurrentViewByIndex:0];
 }
 #pragma mark - JKBackControllerDelegate
 -(UIView *)JKBackControllerMenueView

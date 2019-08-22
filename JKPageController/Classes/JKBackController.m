@@ -1,7 +1,7 @@
 
 //
 //  JKBackController.m
-//  
+//
 //
 //  Created by songjk on 2019/4/15.
 //  Copyright © 2019 sjk. All rights reserved.
@@ -10,13 +10,19 @@
 #import "JKBackController.h"
 #import "JKMenuView.h"
 #import "JKScrollView.h"
+#define kJKPAGE_SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 
+#define kJKPAGE_SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
 
-#define SCR_W [UIScreen mainScreen].bounds.size.width
-#define SCR_H [UIScreen mainScreen].bounds.size.height
-#define kPAGE_IS_IPHONE_X  ((SCR_W == 375.f && SCR_H == 812.f) || (SCR_W == 414.f && SCR_H == 896.f))
-#define kPAGE_NAVHEIGHT (kPAGE_IS_IPHONE_X ? 88 : 64)
-#define kPAGE_TABBARHEIGHT (kPAGE_IS_IPHONE_X ? 83 : 49)
+// iPhone X/XS: 375*812 (@3x)
+// iPhone XS Max: 414*896 (@3x)
+// iPhone XR: 414*896 (@2x)
+#define kJKPAGE_IS_IPHONE_X  ((kJKPAGE_SCREEN_WIDTH == 375.f && kJKPAGE_SCREEN_HEIGHT == 812.f) || (kJKPAGE_SCREEN_WIDTH == 414.f && kJKPAGE_SCREEN_HEIGHT == 896.f))
+
+#define kJKPAGE_NAVHEIGHT (kJKPAGE_IS_IPHONE_X ? 88 : 64)
+
+#define kJKPAGE_TABBARHEIGHT (kJKPAGE_IS_IPHONE_X ? 83 : 49)
+
 #define kLESS_THAN_iOS11 ([[UIDevice currentDevice].systemVersion floatValue] < 11.0 ? YES : NO)
 @interface JKBackController ()<UIScrollViewDelegate,JKMenuViewDelegate>
 @property(nonatomic, weak) id<JKBackControllerDelegate> child;
@@ -79,10 +85,10 @@
         backFrame.size.height -= backFrame.origin.y;
     }
     if ([self isNavigationControllerShows]) {
-        backFrame.size.height -= kPAGE_NAVHEIGHT;
+        backFrame.size.height -= kJKPAGE_NAVHEIGHT;
     }
     if (self.tabBarController && self.hidesBottomBarWhenPushed == NO) {
-        backFrame.size.height -= kPAGE_TABBARHEIGHT;
+        backFrame.size.height -= kJKPAGE_TABBARHEIGHT;
     }
     CGFloat backHeight = backFrame.size.height;
     UIScrollView * backview =[[UIScrollView alloc] initWithFrame:backFrame];
@@ -108,9 +114,9 @@
             self.headView = newHeadView;
             [backview addSubview:self.headView];
         }
-//        if (!self.navigationController) {
-//            self.headerHeight -= [[UIApplication sharedApplication]statusBarFrame].size.height;
-//        }
+        //        if (!self.navigationController) {
+        //            self.headerHeight -= [[UIApplication sharedApplication]statusBarFrame].size.height;
+        //        }
     }
     self.headerHeight = self.headView.frame.size.height;
     
@@ -124,7 +130,7 @@
         self.menuView.frame = menuFram;
         self.menuHeight = self.menuView.frame.size.height;
         self.menuView.delegate = self;
-//        [backview addSubview:self.menuView];
+        //        [backview addSubview:self.menuView];
     }
     CGFloat contentViewY = CGRectGetMaxY(self.headView.frame);
     CGFloat contentVieH = backHeight - CGRectGetMaxY(self.headView.frame) + self.headerHeight;
@@ -153,7 +159,11 @@
     backview.contentSize = CGSizeMake(self.contentView.frame.size.width,heightMax);
 }
 #pragma mark - public
-
+-(void)setCurrentViewByIndex:(int)index
+{
+    self.currentIndex = index;
+    [self addContentViewByIndex:index];
+}
 /**
  更新全部显示
  */
@@ -164,9 +174,9 @@
         self.headView = [self.child JKBackControllerHeadView];
         [self.backview addSubview:self.headView];
         self.headerHeight = self.headView.frame.size.height;
-//        if (!self.navigationController) {
-//            self.headerHeight -= [[UIApplication sharedApplication]statusBarFrame].size.height;
-//        }
+        //        if (!self.navigationController) {
+        //            self.headerHeight -= [[UIApplication sharedApplication]statusBarFrame].size.height;
+        //        }
     }
     
     
@@ -176,7 +186,7 @@
             [self.menuView removeFromSuperview];
             self.menuView = view;
             self.menuView.delegate = self;
-//            [self.backview addSubview:self.menuView];
+            //            [self.backview addSubview:self.menuView];
         }
         CGRect menuFram = self.menuView.frame;
         menuFram.origin.y = CGRectGetMaxY(self.headView.frame);
@@ -198,10 +208,10 @@
 }
 -(void)addSubController:(UIViewController*)vc
 {
-    CGFloat viewX = self.contentView.subviews.count * SCR_W;
     [self addChildViewController:vc];
-    [self.contentView addSubview:vc.view];
-    vc.view.frame = CGRectMake(viewX, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+    //    CGFloat viewX = self.contentView.subviews.count * kJKPAGE_SCREEN_WIDTH;
+    //    [self.contentView addSubview:vc.view];
+    //    vc.view.frame = CGRectMake(viewX, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
     
     self.contentView.contentSize = CGSizeMake(self.contentView.frame.size.width*self.childViewControllers.count, self.contentView.frame.size.height);
 }
@@ -216,9 +226,10 @@
 -(void)JKMenuView:(JKMenuView *)view didSelectIndex:(NSInteger)index
 {
     if (index != self.currentIndex) {
-        [self.contentView scrollRectToVisible:CGRectMake(self.contentView.frame.size.width * index, 0, self.contentView.frame.size.width, self.contentView.frame.size.height) animated:NO];
         NSInteger oldIndex = self.currentIndex;
         self.currentIndex = index;
+        [self.contentView scrollRectToVisible:CGRectMake(self.contentView.frame.size.width * index, 0, self.contentView.frame.size.width, self.contentView.frame.size.height) animated:NO];
+//        [self addContentViewByIndex:(int)index];
         
         if (self.child) {
             [self.child JKBackController:self didScrollFromIndex:oldIndex toIndex:index];
@@ -268,19 +279,34 @@
         }
         
     }
+    else if (scrollView == self.contentView)
+    {
+        CGFloat offx = self.contentView.contentOffset.x;
+        CGFloat oldOffx = self.currentIndex * kJKPAGE_SCREEN_WIDTH;
+        CGFloat newViewX = 0;
+        if (oldOffx < offx && (int)(offx-oldOffx) % (int)kJKPAGE_SCREEN_WIDTH != 0) {
+            newViewX = offx + kJKPAGE_SCREEN_WIDTH;
+        }
+        else
+        {
+            newViewX = offx;
+        }
+        int index = newViewX/kJKPAGE_SCREEN_WIDTH;
+        [self addContentViewByIndex:index];
+    }
 }
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     if (scrollView == self.backview)
     {
-       
+        
         self.bgOffsetY = self.backview.contentOffset.y;
         self.currentViewOffsetY = self.currentView.contentOffset.y;
         
     }
     else
     {
-         self.currentView.scrollEnabled = NO;
+        self.currentView.scrollEnabled = NO;
     }
 }
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -301,10 +327,11 @@
         [self calculateIndex];
     }
 }
+#pragma mark - private
 -(void)calculateIndex
 {
     CGFloat offsetX = self.contentView.contentOffset.x;
-    NSInteger nowIndex =  (NSInteger)(offsetX/SCR_W + 0.1);
+    NSInteger nowIndex =  (NSInteger)(offsetX/kJKPAGE_SCREEN_WIDTH + 0.1);
     if (nowIndex != self.currentIndex)
     {
         NSInteger oldIndex = self.currentIndex;
@@ -313,13 +340,24 @@
         if (self.child) {
             [self.child JKBackController:self didScrollFromIndex:oldIndex toIndex:nowIndex];
         }
-
+        
     }
 }
-
+-(void)addContentViewByIndex:(int)index
+{
+    if (self.childViewControllers.count > index && index >= 0) {
+        UIViewController * vcmax = self.childViewControllers[index];
+        if (![self.contentView.subviews containsObject:vcmax.view]) {
+            [self.contentView addSubview:vcmax.view];
+            CGFloat viewX = index * kJKPAGE_SCREEN_WIDTH;
+            vcmax.view.frame = CGRectMake(viewX, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+            NSLog(@"添加第%d个",index);
+        }
+    }
+}
 /**
  是否显示导航栏
-
+ 
  */
 -(BOOL)isNavigationControllerShows
 {
@@ -360,3 +398,4 @@
     return UIInterfaceOrientationPortrait;
 }
 @end
+
