@@ -52,6 +52,7 @@
 -(void)updateWithTitles:(NSArray *)titles
 {
     self.titles = titles;
+    self.selectBtn = nil;
     [self setItems];
     if (self.btnArry.count>0) {
         self.selectIndex = -1;
@@ -126,7 +127,7 @@
     }
     UIFont * font = [UIFont preferredFontForTextStyle:UIFontTextStyleCallout];
     for (int i=0; i<self.titles.count; i++) {
-        NSString * title = self.titles[i];
+        NSString * title = [NSString stringWithFormat:@"%@",self.titles[i]] ;
         CGFloat titleWidth = 0;
         if (self.itemWidth > 0) {
             titleWidth = self.itemWidth;
@@ -161,7 +162,6 @@
 }
 -(void)clickIndex:(UIButton *)sender
 {
-    
     if (self.selectBtn) {
         if (self.selectBtn == sender) {
             return;

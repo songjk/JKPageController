@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JKPageController'
-  s.version          = '1.1.0'
+  s.version          = '1.1.2'
   s.summary          = 'make controllers showing like pages.'
 
 # This description is used to generate tags and improve search results.

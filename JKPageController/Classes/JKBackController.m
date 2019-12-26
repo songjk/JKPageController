@@ -60,6 +60,38 @@
     [super viewWillAppear:animated];
     NSNumber * value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+//    if (!_currentView) {
+//        [self setCurrentViewByIndex:0];
+//    }
+}
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    CGRect frame = self.backview.frame;
+    frame.origin.y = 0;
+    if (!self.parentViewController) {
+        frame.origin.y += [[UIApplication sharedApplication]statusBarFrame].size.height;
+    }
+    else if (self.parentViewController && [self.parentViewController isKindOfClass:[UITabBarController class]]) {
+        frame.origin.y += [[UIApplication sharedApplication]statusBarFrame].size.height;
+    }
+    else if (![self isNavigationControllerShows] && [self.parentViewController isKindOfClass:[UINavigationController class]]) {
+        frame.origin.y += [[UIApplication sharedApplication]statusBarFrame].size.height;
+    }
+    frame.size.height = self.view.frame.size.height - frame.origin.y;
+    frame.size.width = self.view.frame.size.width;
+    self.backview.frame = frame;
+    
+    self.headerHeight = self.headView.frame.size.height;
+    
+    CGFloat contentViewY = CGRectGetMaxY(self.headView.frame);
+    CGFloat contentVieH = frame.size.height - CGRectGetMaxY(self.headView.frame) + self.headerHeight;
+    if ([self.backview.subviews containsObject:self.menuView]) {
+        contentViewY = CGRectGetMaxY(self.menuView.frame);
+        contentVieH = frame.size.height - CGRectGetMaxY(self.menuView.frame) + self.headerHeight;
+    }
+    self.contentView.frame = CGRectMake(0, contentViewY, frame.size.width, contentVieH);
+    self.contentView.contentSize = CGSizeMake(self.contentView.frame.size.width*self.childViewControllers.count, self.contentView.frame.size.height);
 }
 -(void)dealloc
 {
@@ -229,7 +261,7 @@
         NSInteger oldIndex = self.currentIndex;
         self.currentIndex = index;
         [self.contentView scrollRectToVisible:CGRectMake(self.contentView.frame.size.width * index, 0, self.contentView.frame.size.width, self.contentView.frame.size.height) animated:NO];
-//        [self addContentViewByIndex:(int)index];
+        //        [self addContentViewByIndex:(int)index];
         
         if (self.child) {
             [self.child JKBackController:self didScrollFromIndex:oldIndex toIndex:index];
@@ -381,7 +413,7 @@
 -(void)setCurrentIndex:(NSInteger)currentIndex
 {
     _currentIndex = currentIndex;
-    UIViewController<JKBackControllerSubDelegate> *vc = self.childViewControllers[self.currentIndex];
+    UIViewController<JKBackControllerSubDelegate> *vc = self.childViewControllers[currentIndex];
     _currentView = [vc JKBackControllerScrollView];
     self.currentViewOffsetY = _currentView.contentOffset.y;
 }
@@ -398,4 +430,5 @@
     return UIInterfaceOrientationPortrait;
 }
 @end
+
 

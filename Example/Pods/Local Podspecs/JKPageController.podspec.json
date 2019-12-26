@@ -1,6 +1,6 @@
 {
   "name": "JKPageController",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "summary": "make controllers showing like pages.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/songjk/JKPageController",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/songjk/JKPageController.git",
-    "tag": "1.0.0"
+    "tag": "1.1.2"
   },
   "platforms": {
     "ios": "8.0"
